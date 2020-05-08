@@ -63,3 +63,27 @@ LevelCurvesHoyerPlot = ggplot() +
   ThesisggTheme()
 LevelCurvesHoyerPlot
 
+
+# First we generate big number of points in the [-1, 1] x [-1, 1] plane and
+# for all these points we we will compute the Hoyer index to
+x = seq(-1, 1, length.out = 500)
+y = seq(-1, 1, length.out = 500)
+data = expand.grid(x = x, y = y)
+Sys.time()
+
+#The code below took me about 2 minutes
+HoyerVals = c()
+for (i in seq(-1, 1, length.out = 500)) {
+  for (j in seq(-1, 1, length.out = 500)) {
+    HoyerVals = c(HoyerVals, HoyerIndex(c(j, i)))
+  }
+}
+Sys.time()
+
+data$HoyerVals = HoyerVals
+
+HoyerHeatMap =
+  levelplot(HoyerVals ~ x * y, data = data, col.regions = bluered(25))
+
+HoyerHeatMap
+
