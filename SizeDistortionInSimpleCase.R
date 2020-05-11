@@ -5,7 +5,7 @@ source("Packages.R")
 # Define the function over which we need to integrate
 f1 = function(x, j, p, alpha) {
   pchisq(qchisq(1 - alpha, p) - x, p, lower.tail = F) * 
-    dgamma(x, shape = j / 2, scale = 2 * sqrt(2))
+    dgamma(x, shape = j / 2, scale = 2 * sqrt(p))
 }
 
 # In this vector we save the values of the lower bound of the actual size
@@ -21,7 +21,7 @@ deltapn = log(log(N)) * sqrt(log(p))
 for (i in seq_along(N)) {
   
   # removing cases where deltapn is negative
-  if (deltapn[i] < 0) {
+  if (deltapn[i] <= 0) {
     next
   }
   
