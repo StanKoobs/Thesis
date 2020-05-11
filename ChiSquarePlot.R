@@ -24,7 +24,8 @@ curvesplot = ggplot() +
   theme(legend.key.size = unit(1.2, "cm"), 
         legend.text = element_text(size = 15, face = "bold"),
         legend.title = element_text(size = 15, face = "bold"),
-        plot.title = element_text(size = 15, face = "bold")) +
+        plot.title = element_text(size = 15, face = "bold", 
+                                  hjust = 0.001)) +
   ThesisggTheme()
 
 # Lets also find the critical value for different degrees of freedom
@@ -42,5 +43,5 @@ critvalplot = ggplot() +
   theme(plot.title = element_text(size = 15, face = "bold")) +
   ThesisggTheme()
 
-library(cowplot)
+#With the use of cowplot package
 plot_grid(curvesplot, critvalplot)
