@@ -4,7 +4,7 @@
 lowerbounds = c()
 
 for (n in 1:100) {
-  deltapn = log10(log10(n)) * sqrt(log10(2))
+  deltapn = log(log(n)) * sqrt(log(2))
   # We use a significance level of 0.05
   critval = qchisq(0.95, 2)
   
@@ -37,7 +37,7 @@ for (n in 1:100) {
 source("Packages.R")
 
 ggplot() + geom_point(aes(x = 1:100, y = lowerbounds)) +
-  labs(x = "n", y = "Lower bound of actual size")
+  labs(x = "n", y = "Lower bound of actual size") + ylim(0, 1)
 
 
 
