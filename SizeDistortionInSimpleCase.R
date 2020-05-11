@@ -38,7 +38,7 @@ for (i in seq_along(N)) {
   for (j in 1:p) {
     terms = choose(p, j)
     prob_binom = dbinom(j, p, prob)
-    
+
     sum_lower = sum_lower + 
       terms * 
       integrate(f1, lower = j * deltapn[i], upper = Inf, p = j)$value * 
