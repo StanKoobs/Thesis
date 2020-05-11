@@ -11,6 +11,7 @@ f1 = function(x, p) {
 # In this vector we save the values of the lower bound of the actual size
 lowerbound = c()
 upperbound = c()
+dif_bound= c()
 
 alpha = 0.05
 p = 2
@@ -62,10 +63,12 @@ for (i in seq_along(N)) {
 
   lowerbound[i] = sum_lower
   upperbound[i] = sum_upper
+  dif_bound[i] = sum_upper - sum_lower
 }
 
 ggplot() + 
   geom_line(aes(x = N, y = lowerbound), size = .1) +
   geom_line(aes(x = N, y = upperbound), size = .1) + 
+  geom_line(aes(x = N, y = dif_bound), size = .1, col = "red") +
   labs(x = "n", y = "size") + 
   ylim(0, .3)
