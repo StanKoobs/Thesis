@@ -26,7 +26,6 @@ for (i in seq_along(N)) {
   
   n = N[i]
   
-  # We use a significance level of 0.05
   critval = qchisq(1 - alpha, p)
   prob = 2 * pnorm(deltapn[i], lower.tail = F)
   
@@ -38,15 +37,26 @@ for (i in seq_along(N)) {
   for (j in 1:p) {
     terms = choose(p, j)
     prob_binom = dbinom(j, p, prob)
-
+    
+    # Splitting the integrals for slightly faster computation
+    integral_part_1 = integrate(f1, 
+                                lower = j * deltapn[i], 
+                                upper = Inf, 
+                                p = j)$value 
+    
+    integral_part_2 = integrate(f1, 
+                                lower = 0, 
+                                upper = j * deltapn[i], 
+                                p = j)$value
+    
     sum_lower = sum_lower + 
       terms * 
-      integrate(f1, lower = j * deltapn[i], upper = Inf, p = j)$value * 
+      integral_part_1 * 
       prob_binom
     
     sum_upper = sum_upper + 
       terms * 
-      integrate(f1, lower = 0, upper = Inf, p = j)$value * 
+      (integral_part_1 + integral_part_2) * 
       prob_binom
   }
 
