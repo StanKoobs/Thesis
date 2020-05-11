@@ -3,8 +3,8 @@
 source("Packages.R")
 
 # Define the functions over which we need to integrate
-f1 = function(x, p) {
-  pchisq(critval - x, p, lower.tail = F) * dgamma(x, shape = p / 2, 
+f1 = function(x, p, alpha) {
+  pchisq(qchisq(1 - alpha, p) - x, p, lower.tail = F) * dgamma(x, shape = p / 2, 
                                                   scale = 2 * sqrt(2))
 }
 
@@ -27,7 +27,6 @@ for (i in seq_along(N)) {
   
   n = N[i]
   
-  critval = qchisq(1 - alpha, p)
   prob = 2 * pnorm(deltapn[i], lower.tail = F)
   
 
@@ -43,12 +42,12 @@ for (i in seq_along(N)) {
     integral_part_1 = integrate(f1, 
                                 lower = j * deltapn[i], 
                                 upper = Inf, 
-                                p = j)$value 
+                                p = j, alpha = 0.05)$value 
     
     integral_part_2 = integrate(f1, 
                                 lower = 0, 
                                 upper = j * deltapn[i], 
-                                p = j)$value
+                                p = j, alpha = 0.05)$value
     
     sum_lower = sum_lower + 
       terms * 
