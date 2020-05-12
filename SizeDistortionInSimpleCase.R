@@ -14,7 +14,7 @@ upperbound = c()
 dif_bound= c()
 
 alpha = 0.05
-p = 20
+p = 100
 N = 1:100
 deltapn = log(log(N)) * sqrt(log(p))
 
@@ -40,26 +40,20 @@ for (i in seq_along(N)) {
                                 lower = j * deltapn[i], 
                                 upper = Inf, 
                                 j = j, p = p, alpha = 0.05)$value 
-    
-    integral_part_2 = integrate(f1, 
-                                lower = 0, 
-                                upper = j * deltapn[i], 
-                                j = j, p = p, alpha = 0.05)$value
-    
+
     # Binomial weight
     prob_binom = dbinom(j, p, prob)
     
     # Computing the lower and upper bound
-    sum_lower = sum_lower + 
-      integral_part_1 *
-      prob_binom
-    
     sum_upper = sum_upper + 
-      (integral_part_1 + integral_part_2) * 
+      integral_part_1 *
       prob_binom
   }
 
-  lowerbound[i] = sum_lower
+  lowerbound[i] = sum_lower + dbinom(1, p, prob) * integrate(f1, 
+                                        lower = deltapn[i], 
+                                        upper = Inf, 
+                                        j = 1, p = p, alpha = 0.05)$value 
   upperbound[i] = sum_upper
   dif_bound[i] = sum_upper - sum_lower
 }
