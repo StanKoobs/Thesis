@@ -55,12 +55,12 @@ for (i in seq_along(N)) {
                                         upper = Inf, 
                                         j = 1, p = p, alpha = 0.05)$value 
   upperbound[i] = sum_upper
-  dif_bound[i] = sum_upper - sum_lower
+  dif_bound[i] = upperbound[i] - lowerbound[i]
 }
 
 ggplot() + 
-  geom_line(aes(x = N, y = lowerbound), size = .1) +
-  geom_line(aes(x = N, y = upperbound), size = .1) + 
-  geom_line(aes(x = N, y = dif_bound), size = .1, col = "red") +
+  geom_line(aes(x = N, y = lowerbound), size = .3) +
+  geom_line(aes(x = N, y = upperbound), size = .3) + 
+  geom_line(aes(x = N, y = dif_bound), size = .3, col = "red") +
   labs(x = "n", y = "size") + 
   ylim(0, .4)
