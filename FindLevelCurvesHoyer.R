@@ -1,5 +1,5 @@
-##### In this script we determine the 2-dimensional vectors which have 
-##### sparsity equal to 1 / 2
+### In this script we determine the 2-dimensional vectors which have 
+### sparsity equal to 1 / 2
 
 # First, we load in the sparsity function
 source("DefineHoyerIndex.R")

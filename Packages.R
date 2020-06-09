@@ -1,8 +1,8 @@
-##### In this script we define the packages to be used ####################
+### In this script we define the packages to be used ######################
 
 # List with the packages which we need
 ListofPackages <-c("ggplot2", "ggforce", "gplots", "mvtnorm", "rootSolve", 
-                   "cowplot", "lattice")
+                   "cowplot", "lattice", "cubature")
 NewPackages <- ListofPackages[!(ListofPackages %in% 
                                   installed.packages()[,"Package"])]
 

@@ -1,4 +1,6 @@
-##### L1 norm and L2 norm #################################################
+### In this script we make the plots for the sparsity section #############
+
+# L1 norm and L2 norm 
 
 # First load in our ggplot theme
 source("ThesisggTheme.R")

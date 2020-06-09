@@ -1,8 +1,33 @@
-##### In this script we plot the chi-square distribution for different 
-##### degrees of freedom
+### In this script we plot the chi-square distribution for different 
+### degrees of freedom
+### Next to that, we plot the power converging to 0.05 graph
 
 source("Packages.R")
 source("ThesisggTheme.R")
+
+
+# Plot of power in example section 5.2
+
+rejectprob = c()
+p = 1:1000
+
+for (i in p) {
+  rejectprob[i] = pchisq(qchisq(0.95, i), i, ncp = 2, lower.tail = F)
+}
+
+
+ggplot() +
+  geom_line(aes(x = p, y = rejectprob)) +
+  theme(legend.key.size = unit(1.2, "cm"), 
+        legend.text = element_text(size = 15, face = "bold"),
+        legend.title = element_text(size = 15, face = "bold"),
+        plot.title = element_text(size = 15, face = "bold", 
+                                  hjust = 0.001)) +
+  labs(x = "p", y = "Power") + 
+  ylim(0, .6) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 8)) +
+  ThesisggTheme() 
+
 
 # Range on which we will plot
 xvec = 0:650
