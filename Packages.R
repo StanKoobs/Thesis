@@ -2,7 +2,7 @@
 
 # List with the packages which we need
 ListofPackages <-c("ggplot2", "ggforce", "gplots", "mvtnorm", "rootSolve", 
-                   "cowplot", "lattice", "cubature")
+                   "cowplot", "lattice", "cubature", "Runuran", "latex2exp")
 NewPackages <- ListofPackages[!(ListofPackages %in% 
                                   installed.packages()[,"Package"])]
 
