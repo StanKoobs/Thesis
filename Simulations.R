@@ -115,4 +115,10 @@ BasicSimulationProbReject = function(p, n, h, nruns, significance = 0.05,
   return(returnlist)
 }
 
+simvecp10 = c()
+for (i in 1:100) {
+  simvecp10[i] = BasicSimulationProbReject(10, i, 0, 2000)$PE
+}
+
+
 

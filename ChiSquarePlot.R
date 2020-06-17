@@ -9,10 +9,10 @@ source("ThesisggTheme.R")
 # Plot of power in example section 5.2
 
 rejectprob = c()
-p = 1:1000
+p = 2:100000
 
 for (i in p) {
-  rejectprob[i] = pchisq(qchisq(0.95, i), i, ncp = 2, lower.tail = F)
+  rejectprob[i - 1] = pchisq(qchisq(0.95, i), i, ncp = log(i)^2, lower.tail = F)
 }
 
 
@@ -23,9 +23,9 @@ ggplot() +
         legend.title = element_text(size = 15, face = "bold"),
         plot.title = element_text(size = 15, face = "bold", 
                                   hjust = 0.001)) +
-  labs(x = "p", y = "Power") + 
+  labs(x = expression(p(n)), y = "Power") + 
   ylim(0, .6) +
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 8)) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 6)) +
   ThesisggTheme() 
 
 

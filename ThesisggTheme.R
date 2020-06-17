@@ -9,10 +9,10 @@ ThesisggTheme <- function() {
                                         linetype = "dashed"),
         panel.grid.minor = element_line(colour = "grey70", 
                                         linetype = "dashed"),
-        axis.text.x = element_text(size= 13),
-        axis.text.y = element_text(size= 13),
-        axis.title.x = element_text(size = 15),
-        axis.title.y = element_text(size = 15),
+        axis.text.x = element_text(size= 10),
+        axis.text.y = element_text(size= 11),
+        axis.title.x = element_text(size = 13),
+        axis.title.y = element_text(size = 13),
         axis.ticks = element_line(size = 1.5),
         axis.ticks.length = unit(1.5, "mm")
   )

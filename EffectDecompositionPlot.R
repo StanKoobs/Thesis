@@ -12,7 +12,8 @@ ggplot() +
             size = .7) +
   geom_line(aes(x = N, y = term2, color = "Term 2"), 
             size = .7) +
-  geom_line(aes(x = N, y = exactValue), size = .7) +
+  geom_line(aes(x = N, y = exactValue2), size = .7) +
+  geom_line(aes(x = N, y = lowerBound), size = .7) +
   scale_color_manual(name = "Effect", 
                      values = c(
                        "Term 0" = "#FF0000", 

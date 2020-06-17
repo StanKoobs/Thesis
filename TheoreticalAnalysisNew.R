@@ -1,6 +1,7 @@
 ##### Finding size distortion in simple case (new) ########################
 
 source("Packages.R")
+source("LowerBoundGenerator.R")
 
 # In this vector we save the values of the lower bound of the actual size
 lowerBound = c()
@@ -14,23 +15,29 @@ term0 = c()
 term1 = c()
 term2 = c()
 
+exactIntegral0 = c()
+exactIntegral1 = c()
+exactIntegral2 = c()
+
 # Adjust these booleans corresponding to which values you want to compute
 computeLower = F
-computeUpper1 = T
+computeUpper1 = F
 computeUpper2 = F
-computeExact = F
+computeExact = T
 computeMC = F
-computeInitial = F
+computeInitial = T
 
 # We let the underlying parameter vector be a scalar multiple of iota_p
 # Choose zero for the scalar if you want to analyze the size of the test
 # Choose a nonzero value to analyze power
-scalar = 0
+scalar = 1
 
 alpha = 0.05
-p = 200
+p = 2
 N = 1:100
 deltapn = log(log(N)) * sqrt(log(p))
+
+Sys.time()
 
 #Loop through all values of N
 for (i in seq_along(N)) {
@@ -83,9 +90,9 @@ for (i in seq_along(N)) {
       return(ifelse(
         sum(x) > qchisq(1 - alpha, p) - sqrt(p) * sum(x[inShat]),
         1, 0) *
-          prod(dchisq(x, df = 1, ncp = p * scalar^2)) / 
-          (pchisq(deltapn[i]^2, df = 1, ncp = p * scalar^2, lower.tail = F)^j * 
-             pchisq(deltapn[i]^2, df = 1, ncp = p * scalar^2)^(p - j)))
+          prod(dchisq(x, df = 1, ncp = scalar^2)) / 
+          (pchisq(deltapn[i]^2, df = 1, ncp = scalar^2, lower.tail = F)^j * 
+             pchisq(deltapn[i]^2, df = 1, ncp = scalar^2)^(p - j)))
     }
     
     
@@ -145,18 +152,42 @@ for (i in seq_along(N)) {
     }
     
     if (computeLower == TRUE) {
-      # We only need to compute something for the case where j <= 3
-      # The terms after that are skipped
-      if (j <= 3) {
-        exactIntegral = adaptIntegrate(f1, 
-                                       lowerLimit = rep(deltapn[i]^2, j),
-                                       upperLimit = rep(Inf, j),
-                                       j = j, p = p, alpha = 0.05)$integral
+      
+      if (j == p) {
+        exactIntegral = ifelse((1 + sqrt(p)) * p * deltapn[i]^2 > qchisq(1 - alpha, p),
+                               1, 0)
+      } else if (qchisq(1 - alpha, p) -  (1 + sqrt(p)) * j * deltapn[i]^2 > (p - j) * deltapn[i]^2) {
+          exactIntegral = 0
+      } else if (j == 0) {
+          exactIntegral = lowerboundgenerator(p, n, alpha, 4000, 0, j) 
+      } else {
+          #if (pchisq(deltapn[i]^2, df = 1, ncp = scalar^2)^(p - j) == 0) {
+          #  exactIntegral = 0
+          #} else {
+            exactIntegral = 1 - pchisq(qchisq(1 - alpha, p) -  (1 + sqrt(p)) * j * deltapn[i]^2,
+                                       df = p - j, ncp = (p - j) * scalar^2) / 
+              pchisq(deltapn[i]^2, df = 1, ncp = scalar^2)^(p - j)
+          #}
         
-        sumLower = sumLower + exactIntegral * probBinom
-      } 
+          #if (exactIntegral < 0) {
+          #  exactIntegral = 0
+          #} 
+      }
+          
+      sumLower = sumLower + exactIntegral * probBinom  
+      
+        
+      if (j == 0) {
+        exactIntegral0[i] = exactIntegral 
+      } else if (j == 1) {
+        exactIntegral1[i] = exactIntegral 
+      } else if (j == 2) {
+        exactIntegral2[i] = exactIntegral 
+      }
+        
     }
-    
+
+     
     if (computeUpper1 == TRUE) {
       
       upperf1 = function(x, j, p, alpha) {
@@ -235,6 +266,7 @@ for (i in seq_along(N)) {
   
 }
 
+Sys.time()
 
 
 ggplot() +
@@ -245,7 +277,17 @@ ggplot() +
 
 
 ggplot() +
-  geom_line(aes(x = N, y = mcApprox)) + 
-  geom_line(aes(x = N, y = upperBound1))
+  geom_line(aes(x = N, y = lowerBound)) + 
+  geom_line(aes(x = N, y = upperBound1)) +
+  geom_hline(yintercept = 0.05) +
+  ylim(0,1)
 
+
+
+qchisq(1 - alpha, p) - (1 + sqrt(10)) * 2 * deltapn[3]^2
+
+
+
+0.5 * (pchisq(deltapn[i]^2, 1) - pchisq(qchisq(1 - alpha, p) - 
+                                            (1 + sqrt(p)) * deltapn[i]^2 - deltapn[i]^2, 1))^2
 
