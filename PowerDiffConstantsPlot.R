@@ -4,7 +4,7 @@ source("Packages.R")
 source("ThesisggTheme.R")
 
 df = data.frame(N = rep(N, 4),
-                y = c(exactValue2, exactValue2alt, initialtest2, initialtestalt), 
+                y = c(mcApproxnull, mcApprox1, initialtestnull, initialtest1), 
                 Type = rep(c("Size", "Power"), each = length(N), times = 2),
                 Test = rep(c("PE", "Initial"), each = 2 * length(N)))
 
@@ -20,7 +20,7 @@ ggplot(data = df) +
                                   hjust = 0.001)) +
   labs(x = "n", y = "") + 
   scale_y_continuous(breaks = scales::pretty_breaks(n = 8), 
-                     limits = c(0, .8)) +
+                     limits = c(0, 1.1)) +
   ThesisggTheme() +
   scale_linetype_manual(values = c(PE = "solid", Initial = "longdash")) +
   scale_color_manual(values = c(Size = "#FF0000", Power = "#0000FF"))

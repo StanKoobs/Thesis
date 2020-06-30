@@ -20,20 +20,20 @@ exactIntegral1 = c()
 exactIntegral2 = c()
 
 # Adjust these booleans corresponding to which values you want to compute
-computeLower = F
+computeLower = T
 computeUpper1 = F
 computeUpper2 = F
-computeExact = T
+computeExact = F
 computeMC = F
-computeInitial = T
+computeInitial = F
 
 # We let the underlying parameter vector be a scalar multiple of iota_p
 # Choose zero for the scalar if you want to analyze the size of the test
 # Choose a nonzero value to analyze power
-scalar = 1
+scalar = 0
 
 alpha = 0.05
-p = 2
+p = 10
 N = 1:100
 deltapn = log(log(N)) * sqrt(log(p))
 
@@ -127,7 +127,7 @@ for (i in seq_along(N)) {
       # Now we use Monte Carlo integration to approximate the 
       # multidimensional integral
       
-      NMCSim = 30000
+      NMCSim = 50000
       mcIntegral = 0
       
       for (k in 1:NMCSim) {
@@ -152,6 +152,10 @@ for (i in seq_along(N)) {
     }
     
     if (computeLower == TRUE) {
+      
+      if (j > 10) {
+        next
+      }
       
       if (j == p) {
         exactIntegral = ifelse((1 + sqrt(p)) * p * deltapn[i]^2 > qchisq(1 - alpha, p),
@@ -277,9 +281,8 @@ ggplot() +
 
 
 ggplot() +
-  geom_line(aes(x = N, y = lowerBound)) + 
-  geom_line(aes(x = N, y = upperBound1)) +
-  geom_hline(yintercept = 0.05) +
+  geom_line(aes(x = N, y = initialtest)) + 
+  geom_line(aes(x = N, y = mcApprox)) +
   ylim(0,1)
 
 

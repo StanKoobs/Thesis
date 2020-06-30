@@ -38,8 +38,10 @@ case2 +
                alpha = 0.3, fill = "blue") +
   geom_line(aes(x = c(-Inf, 2), y = c(1, 1)), linetype = "dotted") +
   geom_line(aes(x = c(1, 1), y = c(-Inf, 2)), linetype = "dotted") +
-  annotate("text", x = 1.5, y = 1.48, size = 14,
-           label = "D")
+  annotate("text", x = 1.5, y = 1.48, size = 15,
+           label = "D") +
+  geom_polygon(aes(x = c(1, 2, 2, 1), y = c(2, 2, 1, 1)), 
+               alpha = 0, color = "black", size = 2)
 
 
 dev.off()

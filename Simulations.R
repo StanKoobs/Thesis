@@ -19,7 +19,7 @@ source("Packages.R")
 
 BasicSimulationProbReject = function(p, n, h, nruns, significance = 0.05, 
                            Sigma = diag(rep(1, p)), diffscalars = F, 
-                           constant = 1 / 10) {
+                           constant = 0.05) {
   
   
   # Vector Theta is built up of h constants and p - h zeros 
@@ -67,9 +67,9 @@ BasicSimulationProbReject = function(p, n, h, nruns, significance = 0.05,
                       "PE106" = rejectmeans[4],
                       "PE1" = rejectmeans[3],
                       "PE09" = rejectmeans[2])
-    return(returnlist)
+    print(returnlist)
   
-  }
+  } else {
   
   # We keep track of the rejections using the following vector
   # Per default, all values are zero but if test i rejects we set the ith
@@ -112,13 +112,35 @@ BasicSimulationProbReject = function(p, n, h, nruns, significance = 0.05,
   }
   returnlist = list("Initial" = mean(RejectVecInit), 
                     "PE" = mean(RejectVecPE))
-  return(returnlist)
-}
-
-simvecp10 = c()
-for (i in 1:100) {
-  simvecp10[i] = BasicSimulationProbReject(10, i, 0, 2000)$PE
+  print(returnlist)
+  }
 }
 
 
+
+pvec = c(100, 300, 500)
+nvec = c(150, 250, 400)
+
+Sys.time()
+for (i in pvec) {
+  for (j in nvec) {
+    print(paste("p =", i, "and n =", j))
+    BasicSimulationProbReject(i, j, 0.03 * i, 2000)
+  }
+}
+Sys.time()
+
+
+
+pvec = c(200, 500)
+n = c(150, 250, 400)
+
+Sys.time()
+for (i in pvec) {
+  for (j in nvec) {
+    print(paste("p =", i, "and n =", j))
+    BasicSimulationProbReject(i, j, 0.25 * i, 2000, diffscalars = T, constant = 0.04)
+  }
+}
+Sys.time()
 

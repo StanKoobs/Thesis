@@ -28,7 +28,6 @@ lowerboundgenerator <- function(p, n, alpha, nrep, scalar, j) {
 }
 
 
-lowerboundgenerator(10, 300, alpha, 2000, 0, 0)
 
 
 
