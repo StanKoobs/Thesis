@@ -1,2 +1,2 @@
 # Thesis
-Code for Thesis: Monte Carlo analysis of the Power Enhancement technique
+Code for Thesis: Analysis of the finite sample properties of the Power Enhancement technique
