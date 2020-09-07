@@ -1,0 +1,165 @@
+---
+title: "Test exam numerical question 1"
+author: "Stan Koobs"
+date: "1-7-2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+install.packages(c("tidyverse","ggplot2","MASS","mvtnorm","readxl", "boot","doParallel"))
+```
+
+## R Markdown
+
+We first make a plot of these functions. We use a theme designed for this exam :).
+
+```{r }
+
+Numericalmethodstheme <- function() {
+  theme(panel.background = element_rect(fill = "grey96"),
+        axis.line = element_blank(),
+        panel.border = element_rect(colour = "gray82", fill = NA,
+                                    size = 1.5),
+        panel.grid.major = element_line(colour = "grey70", 
+                                        linetype = "dashed"),
+        panel.grid.minor = element_line(colour = "grey70", 
+                                        linetype = "dashed"),
+        axis.text.x = element_text(size= 13),
+        axis.text.y = element_text(size= 13),
+        axis.title.x = element_text(size = 15),
+        axis.title.y = element_text(size = 15),
+        axis.ticks = element_line(size = 1.5),
+        axis.ticks.length = unit(1.5, "mm"),
+        legend.position = "none"
+  )
+}
+
+xvec = seq(0, 30, by = 0.01)
+
+curvesplot = ggplot() +              
+  geom_line(aes(x = xvec, y = dchisq(xvec, df = 4), 
+                color = "Chi-square")) +
+  geom_line(aes(x = xvec, y = df(xvec, df1 = 3, df2 = 4), 
+                color = "F")) +
+  scale_color_manual(name = "Legend", 
+                     values = c("Chi-square" = "#FF0000", 
+                                "F" = "#0000FF")) +
+  labs(title = "Chi-square and F distribution", 
+       y = "y", x = "x")
+  
+
+curvesplot
+
+
+```
+We observe an intersection around zero, around 2 and maybe around the end. Let us use a root-finding algorithm to find these. We first define the bisection method.
+
+
+```{r}
+
+
+bisection <- function(ftn, x.l, x.r, tol = 1e-6, max.iter = 100) {
+
+  # check inputs
+  if (x.l >= x.r) {
+    cat("error: x.l >= x.r \n")
+    return(NULL)
+  }
+  f.l <- ftn(x.l)
+  f.r <- ftn(x.r)
+  if (f.l == 0) {
+    return(x.l)
+  } else if (f.r == 0) {
+    return(x.r)
+  } else if (f.l * f.r > 0) {
+    cat("error: ftn(x.l) * ftn(x.r) > 0 \n")
+    return(NULL)
+  }
+  # successively refine x.l and x.r
+  n <- 0
+  while ((x.r - x.l) > tol && n < max.iter) {
+    x.m <- (x.l + x.r) / 2
+    f.m <- ftn(x.m)
+    if (f.m == 0) {
+      return(x.m)
+    } else if (f.l * f.m < 0) {
+      x.r <- x.m
+      f.r <- f.m
+    } else {
+      x.l <- x.m
+      f.l <- f.m
+    }
+    n <- n + 1
+    cat("at iteration", n, "the root lies between", x.l, "and", x.r, "\n")
+  }
+  # return (approximate) root
+  return((x.l + x.r) / 2)
+}
+
+
+```
+
+
+Now we define difference of the two functions. 
+```{r}
+
+rootfunc = function(x) {
+  dchisq(x, df = 4) - df(x, df1 = 3, df2 = 4)
+}
+
+```
+
+We will first search for the root around 2. Therefore we use the interval [1,3] in the bisection method.
+
+```{r}
+
+bisection(rootfunc, 1, 3)
+
+```
+Furthermore, also note that the another intersection can be found at the zero point.
+
+
+```{r}
+
+rootfunc(0)
+
+```
+
+We will make another plot to check what happens between 10 and 30 since we cannot see that from the previous.
+
+
+```{r}
+
+xvec = seq(0, 30, by = 0.01)
+
+ggplot() +
+  geom_line(aes(x = xvec, y = rootfunc(xvec))) +
+  geom_hline(yintercept = 0) +
+  xlim(10, 30) +
+  ylim(-0.005, 0.01)
+
+```
+We see another root around 16. We now use the bisection method another time.
+
+```{r}
+
+bisection(rootfunc, 10, 20)
+
+```
+We find another root at 16.32375.
+
+We can do one more check to the right of this interval.
+
+
+```{r}
+bisection(rootfunc, 16.33, 10000000)
+```
+
+Now we indeed get an error that the line does not cross the x-axis anymore. The probability mass of both functions is so extremely small there that we can be sure that we can not find any further intersections.
+
+We conclude that the intersection of f(x) and g(x) can be found at x = 0, x = 1.6835 and x = 16.32375.
+
+
+
+
