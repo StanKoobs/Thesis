@@ -1,5 +1,6 @@
 
 ### Lowerbound generator general K&P
+source("Packages.R")
 
 lowerboundgeneratorgeneral <- function(p, n, alpha, nrep, theta) {
   delta = log(log(n)) * sqrt(log(p))
@@ -11,21 +12,22 @@ lowerboundgeneratorgeneral <- function(p, n, alpha, nrep, theta) {
   } else {
     inornot = rep(0, nrep)
     for (i in 1:nrep) {
-      sample = urchisq(p - numbsparse, df = 1, 
-                       lb = Falpha - (p - 1) * delta^2,
-                       ub = delta^2)
-      sample = c(sample, urnorm(numbsparse, mean = sqrt(n) * scalar, lb = 0, ub = delta)^2)
+      sample = c()
+      for (j in 1:p) {
+        sample[j] = urnorm(1, mean = sqrt(n) * theta[j], lb = 0, ub = delta)^2
+      }
       if (sum(sample) > Falpha) {
         inornot[i] = 1
       }
     }
     propin = mean(inornot)
-    
-    lower = propin
+
   }
   
-  return(lower)
+  return(propin)
 }
 
-
+Sys.time()
+lowerboundgeneratorgeneral(100, 100, 0.05, 2000, rep(0, 100))
+Sys.time()
 
